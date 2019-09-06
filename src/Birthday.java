@@ -2,12 +2,19 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Birthday extends Application {
@@ -17,9 +24,26 @@ public class Birthday extends Application {
 		GuessBirthday birthday = new GuessBirthday();
 		Button enterBtn = new Button("Enter");
 		TextField input = new TextField();
-		TextArea output = new TextArea("Is your birthday in Set1?\n" + birthday.getSet(0));
+		Label output = new Label("Is your birthday in Set1?\n " + "\t" + birthday.getSet(0));
 		Button resetBtn = new Button("Reset");
 		Label direction = new Label("Please enter 1 for Yes or 0 for No");
+
+		output.setFont(Font.font("Times New Roman", 40));
+		output.setBorder(new Border(
+				new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+
+		input.setFont(Font.font("Arial", 20));
+		input.setAlignment(Pos.CENTER);
+		input.prefWidth(800);
+		direction.setFont(Font.font("Times New Roman", 30));
+
+		resetBtn.setPrefHeight(100);
+		resetBtn.setPrefWidth(100);
+		resetBtn.setFont(Font.font("Times new Roman", 20));
+
+		enterBtn.setPrefHeight(100);
+		enterBtn.setPrefWidth(100);
+		enterBtn.setFont(Font.font("Times new Roman", 20));
 
 		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
 			@Override
@@ -32,13 +56,16 @@ public class Birthday extends Application {
 			birthday.setIndex(0);
 			birthday.setDay(0);
 			input.setText("");
-			output.setText("Is your birthday in Set1?\n" + birthday.getSet(0));
+			output.setText("Is your birthday in Set1?\n\t" + birthday.getSet(0));
+			direction.setText("Please enter 1 for Yes or 0 for No");
 		});
 		enterBtn.setOnAction(event);
 
 		VBox root = new VBox();
 		root.getChildren().addAll(output, direction, input, enterBtn, resetBtn);
-		Scene scene = new Scene(root, 600, 600);
+		root.setAlignment(Pos.CENTER);
+
+		Scene scene = new Scene(root, 1000, 600);
 
 		primaryStage.setTitle("Birthday Guesser");
 		primaryStage.setScene(scene);
@@ -55,27 +82,34 @@ public class Birthday extends Application {
 		}
 	}
 
-	private void updateEvent(GuessBirthday birthday, TextField input, TextArea output, Label direction) {
+	private void updateEvent(GuessBirthday birthday, TextField input, Label output, Label direction) {
 		if (birthday.getIndex() == 4) {
+			if (input.getText().isEmpty()) {
+				direction.setText("Invalid input, enter 1 for Yes or 0 for No");
+				return;
+			}
 			computeDay(input.getText(), birthday.getIndex(), birthday);
 			input.setText("");
-			output.setText("Your birthday is on the " + Integer.toString(birthday.getDay())
-					+ " and your birthday in binary is " + Integer.toBinaryString(birthday.getDay()));
+			output.setText("Your birthday is on: " + Integer.toString(birthday.getDay()) + " and in binary: "
+					+ Integer.toBinaryString(birthday.getDay()));
 			birthday.setIndex(birthday.getIndex() + 1);
+			direction.setText("Click Reset to play again!");
 		} else if (birthday.getIndex() == 5) {
-			output.setText("Your birthday is on the " + Integer.toString(birthday.getDay())
-					+ " and your birthday in binary is " + Integer.toBinaryString(birthday.getDay()));
+			output.setText("Your birthday is on: " + Integer.toString(birthday.getDay()) + " and in binary: "
+					+ Integer.toBinaryString(birthday.getDay()));
+			direction.setText("Click Reset to play again!");
 		} else {
 			if ("1".equals(input.getText()) || "0".equals(input.getText())) {
 				computeDay(input.getText(), birthday.getIndex(), birthday);
 				birthday.setIndex(birthday.getIndex() + 1);
 				input.setText("");
 				direction.setText("Please enter 1 for Yes or 0 for No");
-				output.setText("Is your birthday in Set" + (birthday.getIndex() + 1) + "?\n"
+				output.setText("Is your birthday in Set" + (birthday.getIndex() + 1) + "?\n\t"
 						+ birthday.getSet(birthday.getIndex()));
 			} else {
-				direction.setText("Invalid input, try again.");
+				direction.setText("Invalid input, enter 1 for Yes or 0 for No");
 			}
 		}
 	}
+
 }
