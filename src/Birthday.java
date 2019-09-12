@@ -1,4 +1,6 @@
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -7,13 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -24,18 +20,19 @@ public class Birthday extends Application {
 		GuessBirthday birthday = new GuessBirthday();
 		Button enterBtn = new Button("Enter");
 		TextField input = new TextField();
-		Label output = new Label("Is your birthday in Set1?\n " + "\t" + birthday.getSet(0));
+		Label output = new Label("Is your birthday in Set 1?\n " + "\t" + birthday.getSet(0));
 		Button resetBtn = new Button("Reset");
 		Label direction = new Label("Please enter 1 for Yes or 0 for No");
 
 		output.setFont(Font.font("Times New Roman", 40));
-		output.setBorder(new Border(
-				new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		output.setId("output");
 
 		input.setFont(Font.font("Arial", 20));
 		input.setAlignment(Pos.CENTER);
 		input.prefWidth(800);
+
 		direction.setFont(Font.font("Times New Roman", 30));
+		direction.setId("direction");
 
 		resetBtn.setPrefHeight(100);
 		resetBtn.setPrefWidth(100);
@@ -56,7 +53,7 @@ public class Birthday extends Application {
 			birthday.setIndex(0);
 			birthday.setDay(0);
 			input.setText("");
-			output.setText("Is your birthday in Set1?\n\t" + birthday.getSet(0));
+			output.setText("Is your birthday in Set 1?\n\t" + birthday.getSet(0));
 			direction.setText("Please enter 1 for Yes or 0 for No");
 		});
 		enterBtn.setOnAction(event);
@@ -64,8 +61,11 @@ public class Birthday extends Application {
 		VBox root = new VBox();
 		root.getChildren().addAll(output, direction, input, enterBtn, resetBtn);
 		root.setAlignment(Pos.CENTER);
+		root.setSpacing(15);
 
 		Scene scene = new Scene(root, 1000, 600);
+
+		scene.getStylesheets().add((new File("src/resources/Birthday.css")).toURI().toString());
 
 		primaryStage.setTitle("Birthday Guesser");
 		primaryStage.setScene(scene);
@@ -104,7 +104,7 @@ public class Birthday extends Application {
 				birthday.setIndex(birthday.getIndex() + 1);
 				input.setText("");
 				direction.setText("Please enter 1 for Yes or 0 for No");
-				output.setText("Is your birthday in Set" + (birthday.getIndex() + 1) + "?\n\t"
+				output.setText("Is your birthday in Set " + (birthday.getIndex() + 1) + "?\n\t"
 						+ birthday.getSet(birthday.getIndex()));
 			} else {
 				direction.setText("Invalid input, enter 1 for Yes or 0 for No");
